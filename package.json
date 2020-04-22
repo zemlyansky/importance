@@ -1,0 +1,18 @@
+{
+  "name": "importance",
+  "version": "0.0.1",
+  "description": "Permutation feature importance",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ml",
+    "xai",
+    "interpretability"
+  ],
+  "author": "Anton Zemlyansky",
+  "license": "MIT",
+  "dependencies": {
+  }
+}
