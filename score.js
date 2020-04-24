@@ -27,13 +27,15 @@ function ce (yt, yp) {
     const probs = yp[i].map(classProb => classProb < eps ? eps : classProb > (1 - eps) ? 1 - eps : classProb)
     const sum = probs.reduce((p, v) => p + v)
     ce.push(
-      -probs
+      probs
         .map(p => p / sum)
-        .map((p, i) => Math.log(p) * (yt[i] === i))
+        .map((p, j) => Math.log(p) * (yt[i] === j))
         .reduce((a, v) => a + v)
     )
   }
-  return ce.reduce((a, v) => a + v / yt.length)
+
+  const res = ce.reduce((a, v) => a + v / yt.length)
+  return res
 }
 
 const scoreTypes = {

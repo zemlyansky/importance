@@ -15,7 +15,7 @@ function permutationScores (model, X, y, kind, id, nRepeats) {
 
 module.exports = function importance (model, X, y, opts = {}) {
   const log = opts.verbose ? console.log : () => {}
-  const kind = opts.kind ? opts.kind : (Array.from(new Set(y)).length > 10) ? 'mae' : 'ce'
+  const kind = opts.kind ? opts.kind : (Array.from(new Set(y)).length / y.length > 0.5) ? 'mae' : 'ce'
   const nRepeats = opts.n || 1
   const onlyMeans = opts.means || (nRepeats === 1)
   const baseScore = score(model, X, y, kind)
@@ -26,8 +26,9 @@ module.exports = function importance (model, X, y, opts = {}) {
 
   const importances = []
   for (let i = 0; i < nFeatures; i++) {
-    log('Computing importance of feature:', i)
-    importances.push(permutationScores(model, X, y, kind, i, nRepeats).map(imp => baseScore - imp))
+    const imp = permutationScores(model, X, y, kind, i, nRepeats).map(score => baseScore - score)
+    log(' - computing importance of feature: %d  ->  %d', i, imp.reduce((a, v) => a + v / imp.length, 0))
+    importances.push(imp)
   }
 
   // if (opts.scale) { }
