@@ -27,7 +27,7 @@ module.exports = function importance (model, X, y, opts = {}) {
   const importances = []
   for (let i = 0; i < nFeatures; i++) {
     const imp = permutationScores(model, X, y, kind, i, nRepeats).map(score => baseScore - score)
-    log(' - computing importance of feature: %d  ->  %d', i, imp.reduce((a, v) => a + v / imp.length, 0))
+    log(' - computing importance of feature: %d  ->  %f', i, imp.reduce((a, v) => a + v / imp.length, 0))
     importances.push(imp)
   }
 

@@ -25,16 +25,16 @@ function ce (yt, yp) {
   for (let i = 0; i < yt.length; i++) {
     // Limit probs to (eps, 1 - eps)
     const probs = yp[i].map(classProb => classProb < eps ? eps : classProb > (1 - eps) ? 1 - eps : classProb)
-    const sum = probs.reduce((p, v) => p + v)
+    const sum = probs.reduce((p, v) => p + v, 0)
     ce.push(
       probs
         .map(p => p / sum)
         .map((p, j) => Math.log(p) * (yt[i] === j))
-        .reduce((a, v) => a + v)
+        .reduce((a, v) => a + v, 0)
     )
   }
 
-  const res = ce.reduce((a, v) => a + v / yt.length)
+  const res = ce.reduce((a, v) => a + v / yt.length, 0)
   return res
 }
 
