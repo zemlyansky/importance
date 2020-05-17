@@ -1,5 +1,18 @@
 var score = require('./score')
 
+function allPermutationScore (model, X, y, kind, nRepeats) {
+  const scores = []
+  for (let r = 0; r < nRepeats; r++) {
+    const Xclone = JSON.parse(JSON.stringify(X))
+    for (let i = Xclone.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[Xclone[i], Xclone[j]] = [Xclone[j], Xclone[i]]
+    }
+    scores.push(score(model, Xclone, y, kind))
+  }
+  return scores.reduce((a, v) => a + v / nRepeats)
+}
+
 function permutationScores (model, X, y, kind, id, nRepeats) {
   const scores = []
   for (let r = 0; r < nRepeats; r++) {
@@ -24,14 +37,21 @@ module.exports = function importance (model, X, y, opts = {}) {
   log('Score: %s, N repeats: %d, N features: %d', kind, nRepeats, nFeatures)
   log('Base score:', baseScore)
 
-  const importances = []
+  let importances = []
   for (let i = 0; i < nFeatures; i++) {
     const imp = permutationScores(model, X, y, kind, i, nRepeats).map(score => baseScore - score)
     log(' - computing importance of feature: %d  ->  %f', i, imp.reduce((a, v) => a + v / imp.length, 0))
     importances.push(imp)
   }
 
-  // if (opts.scale) { }
+  if (opts.scale) {
+    // Return relative permutation importance
+    const permScore = allPermutationScore(model, X, y, kind, nRepeats)
+    const bestScore = opts.kind === 'acc' ? 100 : 0
+    const factor = (bestScore - permScore)
+    log('All-permuted score:', permScore)
+    importances = importances.map(imp => imp.map(v => v / (factor !== 0 ? factor : 1)))
+  }
 
   const importancesMeans = importances.map(imps => imps.reduce((a, v) => a + v / nRepeats))
   const importancesStds = importances.map((imps, i) => {
