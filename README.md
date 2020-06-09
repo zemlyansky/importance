@@ -4,7 +4,8 @@
 
 When called, the `importance` function shuffles each feature `n` times and each time computes the difference between the base score (calculated with original features `X` and target variable `y`) and permuted data. Intuitively that shows how performance of a model decreases when we "remove" the feature.
 
-More info about the method: [Permutation Feature Importance](https://christophm.github.io/interpretable-ml-book/feature-importance.html)
+- More info about the method: [Permutation Feature Importance](https://christophm.github.io/interpretable-ml-book/feature-importance.html)
+- Permutation importance can be biased if features are highly correlated ([Hooker,  Mentch 2019](https://arxiv.org/pdf/1905.03151v1.pdf))
 
 ### Usage
 ```javascript
