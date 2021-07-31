@@ -31,7 +31,7 @@ rf.train(X, y)
 console.log('Random forest pred:', rf.predict(Xt))
 
 console.log('True Y:', yt)
-const opts = { kind: 'mse', n: 10, means: true, verbose: false }
+const opts = { kind: 'mse', n: 10, means: true, verbose: true, scale: true }
 
 const impsLM = importance(lm, X, y, opts)
 console.log('LM', impsLM)
